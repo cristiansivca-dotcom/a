@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --background: 0, 0, 0;
+  --foreground: 255, 255, 255;
+
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+
+  /* Primary Colors (Default Blue) */
+  --primary-color: 59, 130, 246;
+  --secondary-color: 99, 102, 241;
+}
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-glass: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Dynamic Primary Colors */
+  --color-primary: rgb(var(--primary-color));
+  --color-secondary: rgb(var(--secondary-color));
+}
+
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(var(--primary-color), 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(var(--secondary-color), 0.05) 0%, transparent 50%);
+}
+
+/* Ensure select options are visible in all browsers */
+option {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-hover {
+  transition: all 0.3s ease;
+}
+
+.glass-hover:hover {
+  background: var(--glass-highlight);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-hover:hover {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.glass-iphone {
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 10px 40px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.text-gradient {
+  background-image: linear-gradient(135deg, rgb(var(--foreground)) 0%, rgba(var(--foreground), 0.6) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Fallback */
+}
+
+.dark .text-gradient {
+  background-image: linear-gradient(135deg, #ffffff 0%, #a5a5a5 100%);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    background-image: none !important;
+    color: black !important;
+  }
+
+  .glass {
+    background: white !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
