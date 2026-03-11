@@ -178,15 +178,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </nav>
 
                 <div className="mt-auto pt-6 border-t border-white/5">
-                    <form action={logout}>
-                        <button
-                            type="submit"
-                            className="flex items-center gap-3 px-4 py-3 w-full text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all group"
-                        >
-                            <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-                            <span className="font-medium">Cerrar Sesión</span>
-                        </button>
-                    </form>
+                    <button
+                        onClick={async () => {
+                            const supabase = createClient();
+                            await supabase.auth.signOut();
+                            window.location.href = "/login";
+                        }}
+                        className="flex items-center gap-3 px-4 py-3 w-full text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all group"
+                    >
+                        <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                        <span className="font-medium">Cerrar Sesión</span>
+                    </button>
                 </div>
             </aside>
 
