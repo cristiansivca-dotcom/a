@@ -58,32 +58,6 @@ export async function login(formData: FormData) {
     }
 }
 
-export async function signInWithGoogle() {
-    const supabase = await createClient();
-
-    // Get origin for redirect URL
-    const origin = (await (await import("next/headers")).headers()).get("origin") || "";
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-            redirectTo: `${origin}/auth/callback`,
-            queryParams: {
-                access_type: 'offline',
-                prompt: 'consent',
-            },
-        },
-    });
-
-    if (error) {
-        console.error('Google Auth Error:', error.message);
-        return { error: error.message };
-    }
-
-    if (data.url) {
-        redirect(data.url);
-    }
-}
 
 export async function signInWithGitHub() {
     const supabase = await createClient();

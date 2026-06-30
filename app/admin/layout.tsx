@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutDashboard, Users, UserPlus, LogOut, Package, ShieldCheck, Menu, X, Settings, FileText } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, LogOut, Package, ShieldCheck, Menu, X, Settings, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -148,8 +148,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {(userRole === 'admin' || userRole === 'billing') && (
                         <>
                             <NavItem
-                                icon={FileText}
-                                label="Facturación"
+                                icon={ClipboardList}
+                                label="Inspecciones"
                                 href="/admin/billing"
                                 active={pathname.startsWith("/admin/billing")}
                                 onClick={() => setIsSidebarOpen(false)}

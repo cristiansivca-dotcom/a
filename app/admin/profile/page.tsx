@@ -147,7 +147,7 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex items-center gap-3 text-xs text-blue-500/60 font-medium px-4">
                                 <CheckCircle2 className="w-3.5 h-3.5" />
-                                Cuenta Verificada con {user?.app_metadata?.provider === 'google' ? 'Google' : 'Email'}
+                                Cuenta Verificada con {user?.app_metadata?.provider === 'github' ? 'GitHub' : 'Email'}
                             </div>
                         </div>
                     </motion.div>

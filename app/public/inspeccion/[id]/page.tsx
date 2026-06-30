@@ -52,10 +52,16 @@ interface BillingRequest {
     status: string;
 }
 
-interface BillingProduct {
-    id: string;
-    name: string;
-}
+const DEFAULT_MATERIALS = [
+    "Banner 13oz",
+    "Vinil Autoadhesivo Brillante",
+    "Vinil Autoadhesivo Mate",
+    "Vinil Microperforado",
+    "Lona Translúcida",
+    "Acrílico",
+    "Estructura Metálica",
+    "Luces LED"
+];
 
 export default function PublicInspectionPage() {
     const { id } = useParams();
@@ -66,8 +72,8 @@ export default function PublicInspectionPage() {
     const [existingInspectionId, setExistingInspectionId] = useState<string | null>(null);
     const [request, setRequest] = useState<BillingRequest | null>(null);
     const [fetchError, setFetchError] = useState<string | null>(null);
-    const [billingProducts, setBillingProducts] = useState<BillingProduct[]>([]);
     const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+    const [customMaterial, setCustomMaterial] = useState("");
     const [inspectionItems, setInspectionItems] = useState<InspectionItem[]>([
         { id: Math.random().toString(36).substring(2, 9), description: '', height: '', width: '' }
     ]);
@@ -101,14 +107,6 @@ export default function PublicInspectionPage() {
                 }
 
                 setRequest(data);
-
-                // Fetch products for materials
-                const { data: products } = await supabase
-                    .from('billing_products')
-                    .select('id, name')
-                    .order('name');
-
-                if (products) setBillingProducts(products);
 
                 // Check if an inspection already exists — pre-fill if so
                 const { data: existing } = await supabase
@@ -548,17 +546,17 @@ export default function PublicInspectionPage() {
                                         <div className="space-y-1.5">
                                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest pl-1">Materiales Específicos <span className="text-blue-400 normal-case">(selecciona uno o varios)</span></label>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                {billingProducts.map(p => {
-                                                    const isSelected = selectedMaterials.includes(p.name);
+                                                {DEFAULT_MATERIALS.map(mat => {
+                                                    const isSelected = selectedMaterials.includes(mat);
                                                     return (
                                                         <button
-                                                            key={p.id}
+                                                            key={mat}
                                                             type="button"
                                                             onClick={() => {
                                                                 setSelectedMaterials(prev =>
                                                                     isSelected
-                                                                        ? prev.filter(m => m !== p.name)
-                                                                        : [...prev, p.name]
+                                                                        ? prev.filter(m => m !== mat)
+                                                                        : [...prev, mat]
                                                                 );
                                                             }}
                                                             className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-left transition-all font-medium text-sm ${isSelected
@@ -574,15 +572,57 @@ export default function PublicInspectionPage() {
                                                                     </svg>
                                                                 )}
                                                             </span>
-                                                            {p.name}
+                                                            {mat}
                                                         </button>
                                                     );
                                                 })}
                                             </div>
+
+                                            {/* Custom material input */}
+                                            <div className="mt-3 flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={customMaterial}
+                                                    onChange={e => setCustomMaterial(e.target.value)}
+                                                    placeholder="Agregar otro material manualmente..."
+                                                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white text-sm outline-none focus:border-blue-500/50 transition-all font-medium"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const trimmed = customMaterial.trim();
+                                                        if (trimmed && !selectedMaterials.includes(trimmed)) {
+                                                            setSelectedMaterials(prev => [...prev, trimmed]);
+                                                            setCustomMaterial("");
+                                                        }
+                                                    }}
+                                                    className="px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all"
+                                                >
+                                                    Agregar
+                                                </button>
+                                            </div>
+
                                             {selectedMaterials.length > 0 && (
-                                                <p className="text-[10px] text-blue-400 font-bold px-1 mt-1">
-                                                    Seleccionado(s): {selectedMaterials.join(' • ')}
-                                                </p>
+                                                <div className="mt-4 p-4 bg-white/5 rounded-2xl border border-white/5 space-y-2">
+                                                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Materiales Seleccionados:</p>
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {selectedMaterials.map(mat => (
+                                                            <span
+                                                                key={mat}
+                                                                className="px-3 py-1.5 bg-blue-500/10 border border-blue-500/25 rounded-xl text-xs font-semibold text-blue-400 flex items-center gap-1.5"
+                                                            >
+                                                                {mat}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setSelectedMaterials(prev => prev.filter(m => m !== mat))}
+                                                                    className="text-blue-500 hover:text-red-400 transition-colors font-bold"
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
                                             )}
                                         </div>
 
